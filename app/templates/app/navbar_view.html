@@ -1,0 +1,90 @@
+{% load static %}
+{% load format_words %}
+
+<div class="Navbar">
+    <div class="Navbar__Link Navbar__Link-brand">
+        <a href="#">
+            <img class="site-logo" src="{% static 'ayamed.jpg' %}">
+        </a>
+    </div>
+    <div class="Navbar__Link Navbar__Link-toggle">
+        <span>≣</span>
+    </div>
+    <nav class="Navbar__Items">
+        <div class="Navbar__Link">
+            Ayamed
+        </div>
+    </nav>
+    <nav class="Navbar__Items Navbar__Items--right">
+        <div class="Navbar__Link">
+            <a class="header-link estudantes" href="{% url 'app:projects' %}">Projectos</a>
+        </div>
+        <!--
+        <div class="Navbar__Link">
+            <a class="header-link estudantes" href="{% url 'app:gergelim_selling' %}">Venda de gergelim</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link estatistica" href="{% url 'app:fish_selling' %}">Fish selling</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link estatistica" href="{% url 'app:fish_lichinga' %}">Fish lichinga</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link estatistica" href="{% url 'app:fish_to_teachers' %}">Fish to teachers</a>
+        </div>
+        <div class="Navbar__Link">
+            <a href="{% url 'app:bank_statement' %}" class="header-link">Statement</a>
+        </div>
+        -->
+        <div class="Navbar__Link">
+            <a href="#" class="header-link full-screen">Full screen</a>
+        </div>
+    </nav>
+</div>
+
+<script>
+    function classToggle() {
+        const navs = document.querySelectorAll('.Navbar__Items');
+        navs.forEach(nav => nav.classList.toggle('Navbar__ToggleShow'));
+    }
+
+    document.addEventListener('fullscreenchange', function(e) {
+        if (document.fullscreenElement) {
+            // console.log('fullscreen mode activated!');
+        } else {
+            // console.log('fullscreen mode deactivated');
+        }
+    });
+
+    let siteLogo = document.querySelector('.site-logo');
+    /*
+    siteLogo.addEventListener('click', function(e){ 
+        siteLogo.requestFullscreen(); 
+    });
+    siteLogo.addEventListener('dblclick', function(e){ 
+         document.exitFullscreen(); 
+    });
+    */
+    siteLogo.addEventListener('click', function(e){ 
+        if(document.fullscreenElement){ 
+            document.exitFullscreen() 
+        } else { 
+            siteLogo.requestFullscreen();
+        } 
+    });
+
+
+    let fullScreen = document.querySelector('.full-screen');
+    fullScreen.addEventListener('click', e => {
+        if (document.fullscreenEnabled) {
+            document.body.requestFullscreen();
+            fullScreen.textContent = 'Remove full screen (double click)';
+        }
+    });
+    fullScreen.addEventListener('dblclick', function(e){ 
+        document.exitFullscreen();
+        fullScreen.textContent = 'Full screen';
+    });
+      
+    // document.querySelector('.Navbar__Link-toggle').addEventListener('click', classToggle);
+</script>

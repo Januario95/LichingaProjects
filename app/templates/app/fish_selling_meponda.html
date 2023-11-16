@@ -1,0 +1,407 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling - Meponda</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+            padding-top: 0px !important;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 14px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        table tr:nth-child(even) {
+            background-color: #faf6f6;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 230px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 0px;
+        }
+        .additional-expense-box p {
+            margin: 0px;
+            padding: 0px;
+        }
+        .additional-expense-box div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 250px;
+            border-bottom: 1px solid #46ACC2;
+            margin-bottom: 5px;
+        }
+        .additional-expense-box-2 div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        .return-on-investiment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .roi-td {
+            font-weight: bold;
+        }
+        .table-return-option-1 {
+            table-layout: auto;
+        }
+        .return-option .return-option-1 {
+            padding-top: 0px;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_budge">Budget</label>
+                        {{ form.budget }}
+                    </div>
+                    <div class="row">
+                        <label for="id_buy_price">Buy price</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price</label>
+                        {{ form.sell_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_transportation">Transportation</label>
+                        {{ form.transportation }}
+                    </div>
+                    <div class="row">
+                        <label for="id_handler">Handler</label>
+                        {{ form.handler }}
+                    </div>
+                    <div class="row">
+                        <label for="id_n_times">Number of times</label>
+                        {{ form.n_times }}
+                    </div>
+                    <div class="row">
+                        <label for="id_option">ROI Option</label>
+                        {{ form.option }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" value="Calculate">
+                </form>
+            </div>
+
+            {% if show_data1 %}
+                <div class="return-option return-option-1 box">
+                    <div class="additional-expenses return-on-investiment">
+                        <div class="additional-expense-box">
+                            <p>Return on Investiment</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Budget</th>
+                                        <th>Total-Buy</th>
+                                        <th>Total-Sell</th>
+                                        <th>Profit</th>
+                                        <th>Percent Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="budget-selected roi-td">0</td>
+                                        <td class="buy-selected roi-td">0</td>
+                                        <td class="sell-selected roi-td">0</td>
+                                        <td class="profit-selected roi-td">0</td>
+                                        <td class="percent-change-selected roi-td">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <table class="table-return-option-1">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Budget</th>
+                                <th>Buy</th>
+                                <th>Sell</th>
+                                <th>Total Buy</th>
+                                <th>Total sell</th>
+                                <th>Quantity<sub>(bucket)</sub></th>
+                                <th>Transport(fish)</th>
+                                <th>Transport(handler)</th>
+                                <th>Bags</th>
+                                <th>Food(handler)</th>
+                                <th>Return</th>
+                                <th>Profit</th>
+                                <th>Percent Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data1 %}
+                                <tr class="budget-profit-{{ row.id }}">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td class="budget-{{ row.id }} money">{{ row.budget }}</td>
+                                    <td>{{ row.buy_price }}</td>
+                                    <td>{{ row.sell_price }}</td>
+                                    <td class="buy-price-{{ row.id }} money">{{ row.total_buy_price }}</td>
+                                    <td class="sell-price-{{ row.id }} money">{{ row.total_sell_price }}</td>
+                                    <td>{{ row.quantity }}</td>
+                                    <td>{{ row.transportation }}</td>
+                                    <td>{{ row.transp_handler }}</td>
+                                    <td>{{ row.bags }}</td>
+                                    <td>{{ row.food_handler }}</td>
+                                    <td class="money">{{ row.return }}</td>
+                                    <td class="profit-{{ row.id }} money">{{ row.profit }}</td>
+                                    <td class="percent-change-{{ row.id }}">{{ row.percent_change }}%</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+            {% if show_data2 %}
+                <div class="return-option return-option-2 box">
+                    <p></p>
+                    <table class="table-return-option-1">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Budget</th>
+                                <th>Buy</th>
+                                <th>Sell</th>
+                                <th>Total Buy</th>
+                                <th>Total sell</th>
+                                <th>Quantity<sub>(bucket)</sub></th>
+                                <th>Transport(fish)</th>
+                                <th>Transport(handler)</th>
+                                <th>Bags</th>
+                                <th>Food(handler)</th>
+                                <th>Return</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data2 %}
+                                <tr class="budget-profit-{{ row.id }}">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td class="budget-{{ row.id }} money">{{ row.budget }}</td>
+                                    <td>{{ row.buy_price }}</td>
+                                    <td>{{ row.sell_price }}</td>
+                                    <td class="buy-price-{{ row.id }}">{{ row.total_buy_price }}</td>
+                                    <td class="sell-price-{{ row.id }}">{{ row.total_sell_price }}</td>
+                                    <td>{{ row.quantity }}</td>
+                                    <td>{{ row.transportation }}</td>
+                                    <td>{{ row.transp_handler }}</td>
+                                    <td>{{ row.bags }}</td>
+                                    <td>{{ row.food_handler }}</td>
+                                    <td style="money">{{ row.return }}</td>
+                                    <td class="profit-{{ row.id }} money">{{ row.profit }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="12" style="text-align:right;font-weight:bold;">Total</td>
+                                <td style="text-align:right;font-weight:bold;">{{ cumulative_profits }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        let moneys = document.querySelectorAll('.money');
+        for (let money of moneys) {
+            money.textContent = formatNumber(money.textContent)
+        }
+
+        const arrayRange = (start, stop, step) =>
+            Array.from(
+            { length: (stop - start) / step + 1 },
+            (value, index) => start + index * step
+        );
+
+        function highlightCell(className, rowId) {
+            let cell = $(`.${className}-${ rowId }`);
+            cell.css({
+                'font-size': '16px',
+                'font-weight': 'bold',
+            });
+        }
+
+        /*
+        function formatNumber(number) {
+			number =  Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
+			return number
+		}
+        */
+
+        function formatNumber(number) {
+            number = Intl.NumberFormat('en-US', {
+                style: 'currency', currency: 'USD'
+            }).format(number)
+            return number
+        }
+        
+        function removeHighlightCell(className, rowId) {
+            let cell = $(`.${className}-${ rowId }`);
+            cell.css({
+                'font-size': '12px',
+                'font-weight': 'normal',
+            });
+        }
+
+        hoverBudgetProfit();
+        function hoverBudgetProfit() {
+            let range = arrayRange(1, 200, 1);
+            for (let rowId of range) {
+                try {
+                    let tag = $(`.budget-profit-${ rowId }`);
+                    let budget = $(`.budget-${ rowId }`);
+                    let profit = $(`.profit-${ rowId }`);
+                    let buyPrice = $(`.buy-price-${ rowId }`);
+                    let sellPrice = $(`.sell-price-${ rowId }`);
+                    let percentChange = $(`.percent-change-${ rowId }`);
+                    tag.on({
+                        mouseenter: function () {
+                            $(this).css({
+                                'border': '2px solid teal',
+                                'font-size': '16px'
+                            });
+                            /*
+                            highlightCell(`budget`, rowId);
+                            highlightCell(`profit`, rowId);
+                            highlightCell(`buy-price`, rowId);
+                            highlightCell(`sell-price`, rowId);
+                            */
+                            $(`.budget-selected`).text(budget.text());
+                            $(`.buy-selected`).text(buyPrice.text());
+                            $(`.sell-selected`).text(sellPrice.text());
+                            $(`.profit-selected`).text(profit.text());
+                            $(`.percent-change-selected`).text(percentChange.text());
+                        },
+                        mouseleave: function () {
+                            $(this).css({
+                                'border': 'none'
+                            });
+                            /*
+                            removeHighlightCell(`budget`, rowId);
+                            removeHighlightCell(`profit`, rowId);
+                            removeHighlightCell(`buy-price`, rowId);
+                            removeHighlightCell(`sell-price`, rowId);
+                            */
+                        }
+                    });
+                } catch (err) {
+                    //
+                }
+            }
+        }
+    </script>
+{% endblock %}

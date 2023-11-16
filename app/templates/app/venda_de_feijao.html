@@ -1,0 +1,237 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .return-option {
+            width: 100%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        tbody tr th {
+            color: white;
+            text-align: left;
+            background-color: #46ACC2;
+        }
+        tbody tr td {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 12px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 140px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_buy_price">Buy price/25kg</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price/kg</label>
+                        {{ form.sell_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_budget">Budget</label>
+                        {{ form.budget }}
+                    </div>
+                    <div class="row">
+                        <label for="id_transport">Transport</label>
+                        {{ form.transport }}
+                    </div>
+                    <div class="row">
+                        <label for="id_food">Comida</label>
+                        {{ form.food }}
+                    </div>
+                    <div class="row">
+                        <label for="id_accomodation">Acomodacao</label>
+                        {{ form.accomodation }}
+                    </div>
+                    <div class="row">
+                        <label for="id_authorities">Autoridades</label>
+                        {{ form.authorities }}
+                    </div>
+                    <div class="row">
+                        <label for="id_reinvest">Reinvest</label>
+                        {{ form.reinvest }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" value="Calculate">
+                </form>
+            </div>
+
+            <div class="return-option return-option-1 box">
+                <span>Fixes expenses</span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transport</th>
+                            <th>Food</th>
+                            <th>Accomodation</th>
+                            <th>Authorities</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ transport }}</td>
+                            <td>{{ food }}</td>
+                            <td>{{ accomodation }}</td>
+                            <td>{{ authorities }}</td>
+                            <td>{{ fixed_expenses }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <table class="table-return-option-1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Buy price/25kg</th>
+                            <th>Sell price/kg</th>
+                            <th>Budget</th>
+                            <th>Fixed expenses</th>
+                            <th>Total buy price</th>
+                            <th>Quantity (kg)</th>
+                            <th>Quantity (sacos)</th>
+                            <th>Total sell price</th>
+                            <th>Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in values %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ item.buy_price }}</td>
+                                <td>{{ item.sell_price }}</td>
+                                <td>{{ item.budget }}</td>
+                                <td>{{ item.additional_expenses }}</td>
+                                <td>{{ item.total_buy_price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.quantity_sacos }}</td>
+                                <td>{{ item.total_sell_price }}</td>
+                                <td>{{ item.profit }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="9"></td>
+                            <td>{{ total_profit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

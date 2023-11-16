@@ -1,0 +1,248 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 14px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 230px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 0px;
+        }
+        .additional-expense-box div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 250px;
+            border-bottom: 1px solid #46ACC2;
+            margin-bottom: 5px;
+        }
+        .additional-expense-box-2 div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        .calculations {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .calc-row {
+            display: flex;
+            flex-direction: column;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_budge">Budget</label>
+                        {{ form.baldes }}
+                    </div>
+                    <div class="row">
+                        <label for="id_buy_price">Buy price</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price</label>
+                        {{ form.sell_price }}
+                    </div>
+                    
+                    <div class="row">
+                        {% csrf_token %}
+                        <input type="submit" value="Calculate">
+                    </div>
+                </form>
+            </div>
+
+            <div class="return-option return-option-1 box">
+                <h3>Return On Investiment</h3>
+                <div class="calculations">
+                    <div class="calc-row buying">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;">Buy price</th>
+                                    <td>{{ buy_price }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Quantity (backets)</th>
+                                    <td>{{ baldes }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Total buy:</th>
+                                    <td>{{ total_buy }}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="calc-row selling">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;">Sell price</th>
+                                    <td>{{ sell_price }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Quantity (backets)</th>
+                                    <td>{{ baldes }}</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:left;">Total sell</th>
+                                    <td>{{ total_sell }}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!--
+                <table class="table-return-option-1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Sell<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Baldes<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Total Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Total sell<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Profit<sub style="font-size:9px;">(MZN)</sub></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in values %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ row.buy_price }}</td>
+                                <td>{{ row.sell_price }}</td>
+                                <td>{{ row.baldes }}</td>
+                                <td>{{ row.total_buy_price }}</td>
+                                <td>{{ row.total_sell_price }}</td>
+                                <td>{{ row.profit }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

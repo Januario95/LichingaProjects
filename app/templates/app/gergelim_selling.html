@@ -1,0 +1,235 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .return-option {
+            width: 50%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        tbody tr th {
+            color: white;
+            text-align: left;
+            background-color: #46ACC2;
+        }
+        tbody tr td {
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 12px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 140px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_buy_price">Buy price</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price</label>
+                        {{ form.sell_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_budget">Budget</label>
+                        {{ form.budget }}
+                    </div>
+                    <div class="row">
+                        <label for="id_transport">Transporte</label>
+                        {{ form.transport }}
+                    </div>
+                    <div class="row">
+                        <label for="id_food">Comida</label>
+                        {{ form.food }}
+                    </div>
+                    <div class="row">
+                        <label for="id_accomodation">Acomodacao</label>
+                        {{ form.accomodation }}
+                    </div>
+                    <div class="row">
+                        <label for="id_authorities">Autoridades</label>
+                        {{ form.authorities }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" value="Calculate">
+                </form>
+            </div>
+
+            <div class="return-option return-option-1 box">
+                <table class="table-return-option-1">
+                    <tbody>
+                        <tr>
+                            <th>Buy</th>
+                            <td>{{ gergelim.buy_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Sell</th>
+                            <td>{{ gergelim.sell_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Budget total</th>
+                            <td>{{ gergelim.budget }}</td>
+                        </tr>
+                        <tr>
+                            <th>Transporte</th>
+                            <td>{{ gergelim.transport }}</td>
+                        </tr>
+                        <tr>
+                            <th>Comida</th>
+                            <td>{{ gergelim.food }}</td>
+                        </tr>
+                        <tr>
+                            <th>Acomodacao</th>
+                            <td>{{ gergelim.accomodation }}</td>
+                        </tr>
+                        <tr>
+                            <th>Autoridades</th>
+                            <td>{{ gergelim.authorities }}</td>
+                        </tr>
+                        <tr>
+                            <th>Budget de compra</th>
+                            <td>{{ gergelim.buying_budget }}</td>
+                        </tr>
+                        <tr>
+                            <th>Quantidade</th>
+                            <td>{{ gergelim.quantity }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total preco de compra</th>
+                            <td>{{ gergelim.total_buy_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total preco de venda</th>
+                            <td>{{ gergelim.total_sell_price }}</td>
+                        </tr>
+                        <tr>
+                            <th>Profit</th>
+                            <td>{{ gergelim.profit }}</td>
+                        </tr>
+                        <tr>
+                            <th>RIO</th>
+                            <td>{{ gergelim.ROI }}</td>
+                        </tr>
+                        <tr>
+                            <th>% of profit</th>
+                            <td>{{ gergelim.percent_profit }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

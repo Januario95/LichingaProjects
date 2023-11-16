@@ -1,0 +1,378 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 14px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        table tr:nth-child(even) {
+            background-color: #faf6f6;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 230px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 0px;
+        }
+        .additional-expense-box div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 250px;
+            border-bottom: 1px solid #46ACC2;
+            margin-bottom: 5px;
+        }
+        .additional-expense-box-2 div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_budge">Budget</label>
+                        {{ form.budget }}
+                    </div>
+                    <div class="row">
+                        <label for="id_buy_price">Buy price</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price</label>
+                        {{ form.sell_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_transportation">Transportation</label>
+                        {{ form.transportation }}
+                    </div>
+                    <div class="row">
+                        <label for="id_handler">Handler</label>
+                        {{ form.handler }}
+                    </div>
+                    <div class="row">
+                        <label for="id_n_times">Number of times</label>
+                        {{ form.n_times }}
+                    </div>
+                    <div class="row">
+                        <label for="id_option">ROI Option</label>
+                        {{ form.option }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" value="Calculate">
+                </form>
+            </div>
+
+            {% if show_data1 %}
+                <div class="return-option return-option-1 box">
+                    <h3>ROI - Option 1 (recursive)</h3>
+                    <table class="table-return-option-1">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Budget<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Sell<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Total Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Total sell<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Quantity<sub>(kg)</sub></th>
+                                <th>Transportation<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>CREDELEC<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Plastics<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Gelo<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Handler<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Return<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Profit<sub style="font-size:9px;">(MZN)</sub></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data1 %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ row.budget }}</td>
+                                    <td>{{ row.buy_price }}</td>
+                                    <td>{{ row.sell_price }}</td>
+                                    <td>{{ row.total_buy_price }}</td>
+                                    <td>{{ row.total_sell_price }}</td>
+                                    <td>{{ row.quantity }}</td>
+                                    <td>{{ row.transportation }}</td>
+                                    <td>{{ row.CREDELEC }}</td>
+                                    <td>{{ row.plastics }}</td>
+                                    <td>{{ row.gelo }}</td>
+                                    <td>{{ row.handler }}</td>
+                                    <td>{{ row.return }}</td>
+                                    <td>{{ row.profit }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="additional-expenses">
+                        <div class="additional-expense-box">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="8">
+                                            Fixed Costs<sub style="font-size:9px;">(MZN)</sub>
+                                        </th>
+                                    </tr>
+                                    <tr style="background-color:#46ACC2;">
+                                        {% for add in fixed_expenses %}
+                                            <th style="text-align:left;">{{ add|get_key }}</th>
+                                        {% endfor %}
+                                        <th style="text-align:left;">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for add in fixed_expenses %}
+                                            <th style="text-align:left;">{{ add|get_value }}</th>
+                                        {% endfor %}
+                                        <th style="background-color:#46ACC2;color:white;">{{ total_fixed_expenses }}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="additional-expense-box additional-expense-box-2">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="3">Profit</th>
+                                    </tr>
+                                    <tr style="background-color:#46ACC2;">
+                                        <th>Profit</th>
+                                        <th>Fixed Expenses</th>
+                                        <th>Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="font-weight: bold;">
+                                        <td>{{ final_profit }}</td>
+                                        <td>{{ total_fixed_expenses }}</td>
+                                        <td style="background-color:#46ACC2;font-weight:bold;color:white;">{{ profits_minus_fixed_expenses }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if show_data2 %}
+                <div class="return-option return-option-2 box">
+                    <h3>ROI - Option 2</h3>
+                    <table class="table-return-option-1">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Budget<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Sell<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Total Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Total sell<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Quantity<sub>(kg)</sub></th>
+                                <th>Transportation<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>CREDELEC<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Plastics<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Gelo<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Handler<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Return<sub style="font-size:9px;">(MZN)</sub></th>
+                                <th>Profit<sub style="font-size:9px;">(MZN)</sub></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data2 %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ row.budget }}</td>
+                                    <td>{{ row.buy_price }}</td>
+                                    <td>{{ row.sell_price }}</td>
+                                    <td>{{ row.total_buy_price }}</td>
+                                    <td>{{ row.total_sell_price }}</td>
+                                    <td>{{ row.quantity }}</td>
+                                    <td>{{ row.transportation }}</td>
+                                    <td>{{ row.CREDELEC }}</td>
+                                    <td>{{ row.plastics }}</td>
+                                    <td>{{ row.gelo }}</td>
+                                    <td>{{ row.handler }}</td>
+                                    <td>{{ row.return }}</td>
+                                    <td>{{ row.profit }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="13" style="text-align:right;font-weight:bold;">Total</td>
+                                <td>{{ profits2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="additional-expenses">
+                        <div class="additional-expense-box">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="8">
+                                            Fixed Costs<sub style="font-size:9px;">(MZN)</sub>
+                                        </th>
+                                    </tr>
+                                    <tr style="background-color:#46ACC2;">
+                                        {% for add in fixed_expenses %}
+                                            <th style="text-align:left;">{{ add|get_key }}</th>
+                                        {% endfor %}
+                                        <th style="text-align:left;">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for add in fixed_expenses %}
+                                            <th style="text-align:left;">{{ add|get_value }}</th>
+                                        {% endfor %}
+                                        <th style="background-color:#46ACC2;font-weight:bold;color:white;">{{ total_fixed_expenses }}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="additional-expense-box additional-expense-box-2">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="3">Profit</th>
+                                    </tr>
+                                    <tr style="background-color:#46ACC2;">
+                                        <th>Profit</th>
+                                        <th>Fixed Expenses</th>
+                                        <th>Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="font-weight: bold;">
+                                        <th>{{ profits2 }}</th>
+                                        <th>{{ total_fixed_expenses }}</th>
+                                        <th style="background-color:#46ACC2;font-weight:bold;color:white;">{{ profits_minus_fixed_expenses2 }}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

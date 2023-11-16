@@ -1,0 +1,304 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 14px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        table tr:nth-child(even) {
+            background-color: #faf6f6;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        select,
+        button,
+        input[type="date"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            max-width: 270px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+        button {
+            cursor: pointer;
+        }
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 0px;
+        }
+        .additional-expense-box div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 250px;
+            border-bottom: 1px solid #46ACC2;
+            margin-bottom: 5px;
+        }
+        .additional-expense-box-2 div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_start_date">A partir de</label>
+                        {{ form.start_date }}
+                    </div>
+                    <div class="row">
+                        <label for="id_end_dae">Ate</label>
+                        {{ form.end_date }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" class="btn-Submit" value="Calculate">
+                    <button class="show-charts">Show charts</button>
+                </form>
+            </div>
+
+            <div class="statement-graph">
+                <div id="myDiv"></div>
+            </div>
+
+            {% if data %}
+                <div class="return-option return-option-1 box">
+                    <h3>Bank Statement</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Date value</th>
+                                <th>Description</th>
+                                <th>Reference</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                                <th>Currency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ row.Data }}</td>
+                                    <td>{{ row.Data_Valor }}</td>
+                                    <td>{{ row.Descricao }}</td>
+                                    <td>{{ row.Referencia }}</td>
+                                    <td>{{ row.Debito }}</td>
+                                    <td>{{ row.Credito }}</td>
+                                    <td>{{ row.Saldo }}</td>
+                                    <td>{{ row.Moeda }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        let showCharts = document.querySelector('.show-charts');
+        let start_date = document.getElementById('id_start_date');
+        let end_date = document.getElementById('id_end_date');
+
+        showCharts.addEventListener('click', e => {
+            e.preventDefault();
+
+            loadData();
+
+            /*
+            fetch(`/api/bank_statement/${start_date.value}/${end_date.value}/`)
+                .then(res => res.json())
+                .then(data => {
+                    // console.log(data);
+                    let dates = data.dates;
+                    let debits = data.debits;
+                    console.log(dates);
+                    console.log(debits);
+                })
+                .catch(err => console.error(err))
+                */
+        });
+
+        function loadData() {
+            fetch(`/api/bank_statement/${start_date.value}/${end_date.value}/`)
+                .then(res => res.json())
+                .then(data => {
+                    // console.log(data);
+                    let dates = data.dates;
+                    let debits = data.debits;
+                    console.log(dates);
+                    console.log(debits);
+
+                    var data = [
+                        {
+                            x: dates,
+                            y: debits,
+                            type: 'scatter',
+                            mode: 'lines',
+                            name: 'Debito',
+                            line: {color: '#17BECF'},
+                            hovertemplate: '<i>Debito: MZN%{y}' +
+                                '<br>Data: %{x}</i>',
+                        }
+                    ];
+                    var layout = {
+                        title: `Debito de ${start_date.value} ate ${end_date.value}`,
+                        showlegend: true,
+                        legend: {
+                            "orientation": "v",
+                        },
+                        xaxis: {
+                            autorange: true,
+                            // range: [start_date_val, end_date_val],
+                            fixedrange: false,
+                            type: 'date',
+                            categoryorder : "array",
+                            zeroline: true,
+                            showline: true,
+                            showgrid: true,
+                            tickfont : {
+                                size : 10,
+                                color : 'black'
+                            },
+                            // type: 'date',
+                            automargin: false,
+                            tickformat: '%b %d, %Y',
+                            rangeselector: {buttons: [
+                                {
+                                    count: 1,
+                                    label: '1m',
+                                    step: 'month',
+                                    stepmode: 'backward'
+                                },
+                                {
+                                    count: 6,
+                                    label: '6m',
+                                    step: 'month',
+                                    stepmode: 'backward'
+                                },
+                                {step: 'all'}
+                            ]
+                            },
+                            // rangeslider: {range: [start_date_val, end_date_val]},
+                        },
+                        yaxis: {
+                            autorange: true,
+                            // range: [86.8700008333, 138.870004167],
+                            type: 'linear'
+                        },
+                        hovermode: 'x'
+                    }
+                    Plotly.newPlot('myDiv', data, layout);
+                })
+                .catch(err => console.error(err))
+        }
+    </script>
+{% endblock %}

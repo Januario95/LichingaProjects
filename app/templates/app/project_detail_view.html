@@ -1,0 +1,210 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>{{ project.title }}</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .body-div {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .box h2 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table tr {
+            
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        .title-value {
+            padding: 0px;
+            margin: 8px 0px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #46ACC2;
+        }
+        .title-value p {
+            padding: 0px;
+            margin: 0px;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="managers box">
+                <h2>{{ project.title }}</h2>
+                <div class="project-details">
+                    <div class="title-value">
+                        <p class="budget">Total cost:</p>
+                        <p class="budget">MZN {{ project.total_cost }}</p>
+                    </div>
+                    <!-- <div class="title-value">
+                        <p class="expenditure">Expenditure:</p>
+                        <p class="expenditure">MZN {{ project.expenditure }}</p>
+                    </div> -->
+                    <div class="title-value">
+                        <p class="buy-price">Preço de compra:</p>
+                        <p class="buy-price">MZN {{ project.buy_price }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="sell-price">Preço de venda:</p>
+                        <p class="sell-price">MZN {{ project.sell_price }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="total-buy-price">Total Buy Price:</p>
+                        <p class="total-buy-price">MZN {{ project.total_buy_price }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="total-sell-price">Total Sell Price</p>
+                        <p class="total-sell-price">MZN {{ project.total_sell_price }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="quantity">Quantidade:</p>
+                        <p class="quantity">{{ project.quantity.amount }} {{ project.quantity.unit }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="return-on-invest">Retorno do Investimento:</p>
+                        <p class="return-on-invest">MZN {{ project.calc_return }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="profit">Lucro:</p>
+                        <p class="profit">MZN {{ project.profit }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="managers box">
+                <h3>Datas</h3>
+                <div class="project-details">
+                    <div class="title-value">
+                        <p class="start-operation">Início das operacoes:</p>
+                        <p class="start-operation">{{ project.start_operation }}</p>
+                    </div>
+                    <div class="title-value">
+                        <p class="end-operation">Fim das operacoes:</p>
+                        <p class="end-operation">{{ project.end_operation }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="managers box">
+                <table class="table-employee">
+                    <thead>
+                        <tr>
+                            <th colspan="4">Despesas</th>
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in project.expenses.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="expense-name">{{ expense.name }}</td>
+                                <td class="expense-amount">{{ expense.amount }}</td>
+                                <td class="expense-date">{{ expense.date }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <th colspan="2">Total</th>
+                            <th colspan="2" class="total-expenses">MZN {{ project.total_expenses }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="managers box">
+                <table class="table-employee">
+                    <thead>
+                        <tr>
+                            <th colspan="5">Trabalhadores</th>
+                        </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Título</th>
+                            <th>Salário</th>
+                            <th>Tipo de pagamento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for employee in project.employees.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="employee-name">{{ employee.name }}</td>
+                                <td class="employee-title">{{ employee.potision }}</td>
+                                <td class="employee-salary">MZN {{ employee.salary }}</td>
+                                <td class="payment-type">{{ employee.payment_type|format_payment_type }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <th colspan="3">Total</th>
+                            <th colspan="2" class="total-salaries">MZN {{ project.total_salaries }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

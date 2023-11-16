@@ -1,0 +1,220 @@
+{% include "base.html" %}
+{% load static %}
+{% load format_words %}
+
+{% block title %}
+    <title>Fish Selling</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+        .main-body {
+            width: 75%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .body-div {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #46ACC2;
+            border-radius: 8px;
+            margin: 10px;
+            width: 100%;
+        }
+        .box h3 {
+            padding-top: 0px;
+            margin-top: 0px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            border-bottom: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+        table th {
+            font-size: 14px;
+        }
+        table td {
+            font-size: 11px;
+        }
+        table tr:nth-child(even) {
+            background-color: #faf6f6;
+        }
+        .expense-name {
+            text-align: left;
+        }
+        .total-expenses,
+        .total-salaries {
+            text-align: left;
+        }
+        .form-div form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+        .row label {
+            font-size: 12px;
+        }
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        select,
+        input[type="number"],
+        input[type="submit"] {
+            height: 28px;
+            width: 100%;
+            min-width: 170px;
+            border-radius: 17px;
+            border: 1px solid #ccc;
+            text-align: center;
+            outline: none;
+        }
+		input[type="submit"] {
+			cursor: pointer;
+            margin-top: 10px;
+		}
+
+        .additional-expenses {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-top: 7px;
+        }
+        .additional-expense-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 0px;
+        }
+        .additional-expense-box div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 250px;
+            border-bottom: 1px solid #46ACC2;
+            margin-bottom: 5px;
+        }
+        .additional-expense-box-2 div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .additional-expense-total {
+            font-weight: bold;
+        }
+        @media screen and (max-width: 789px) {
+            .body-div {
+                justify-content: center;
+            }
+            .box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+ {% block content %}
+    <div class="main-body">
+        <div class="body-div">
+            <div class="form-div box">
+                <form method="post">
+                    <div class="row">
+                        <label for="id_buy_price">Buy price</label>
+                        {{ form.buy_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_sell_price">Sell price</label>
+                        {{ form.sell_price }}
+                    </div>
+                    <div class="row">
+                        <label for="id_budge">Nr of Customers</label>
+                        {{ form.nr_of_customers }}
+                    </div>
+                    <div class="row">
+                        <label for="id_budge">Kg Per Customer</label>
+                        {{ form.kg_per_customer }}
+                    </div>
+                    <div class="row">
+                        <label for="id_budge">Nr of Months</label>
+                        {{ form.nr_of_months }}
+                    </div>
+                    
+                    {% csrf_token %}
+                    <input type="submit" value="Calculate">
+                </form>
+            </div>
+
+            <div class="return-option return-option-1 box">
+                <h3>Return On Investiment</h3>
+                <table class="table-return-option-1">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Sell<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Nr of Customers</th>
+                            <th>Kg Per Customer</th>
+                            <th>To Assane<sub style="font-size:9px;">(30%)</sub></th>
+                            <th>Owner<sub style="font-size:9px;">(70%)</sub></th>
+                            <th>Total Buy<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Total sell<sub style="font-size:9px;">(MZN)</sub></th>
+                            <th>Profit<sub style="font-size:9px;">(MZN)</sub></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in values %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ row.buy_price }}</td>
+                                <td>{{ row.sell_price }}</td>
+                                <td>{{ row.nr_of_customers }}</td>
+                                <td>{{ row.kg_per_customer }}</td>
+                                <td>{{ row.to_assane }}</td>
+                                <td>{{ row.owner }}</td>
+                                <td>{{ row.total_buy }}</td>
+                                <td>{{ row.total_sell }}</td>
+                                <td>{{ row.profit }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr style="background-color:#46ACC2;color:white;font-weight:bold;">
+                            <td colspan="5"></td>
+                            <td>{{ totals.to_assane }}</td>
+                            <td>{{ totals.owner }}</td>
+                            <td>{{ totals.total_buy }}</td>
+                            <td>{{ totals.total_sell }}</td>
+                            <td>{{ totals.profit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        
+    </script>
+{% endblock %}

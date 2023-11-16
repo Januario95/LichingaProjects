@@ -1,0 +1,195 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" href="{% static 'logo.png' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'roboto2.css' %}">
+    {% block title %}{% endblock %}
+	<style>
+		html, body {
+		    background-color: #F6FBFB;
+		    font-family: 'Roboto', sans-serif;
+			padding: 0px;
+			margin: 0px;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin: auto;
+			width: 100%;
+		}
+		.header-section {
+			background-color: #353740;
+			display: flex;
+			width: 100%;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 0px;
+			position: fixed;
+			top: 0;
+		}
+		.header-section a {
+			cursor: pointer;
+			text-decoration: none;
+		}
+		.header-link {
+            color: #ccc;
+			padding-left: 8px;
+			padding-right: 8px;
+			padding-top: 3px;
+			padding-bottom: 3px;
+			border-radius: 3px;
+			text-decoration: none;
+			transition: all 0.2s background-color;
+		}
+		.header-link:hover,
+		.dropbtn:hover {
+			color: white;
+			/* background-color: #79aec8; */
+		}
+		.site-logo {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+            margin: 3px 0px 0px 10px;
+		}
+		.red-color-mark {
+			color: red;
+			/*font-weight: bold;*/
+		}
+		.green-color-mark {
+			color: teal;
+			/*font-weight: bold;*/
+		}
+		.active-link {
+			color: white;
+			text-decoration: underline;
+			font-weight: bold;
+			/*background-color: #79aec8;
+			background-color: #04AA6D;*/
+		}
+		.bold-test {
+			font-weight: bold;
+			text-align: center;
+		}
+		.invalid-credentials {
+			font-weight: bold;
+		}
+		table thead {
+			/* background-color: #417690; */
+			background-color: #46ACC2;
+			color: white;
+		}
+		.highlight-tr {
+			background-color: #ffc;
+			transform: scale(1.05);
+			font-size: 25px;
+			font-weight: bold;
+		}
+
+
+
+		.Navbar {
+			width: 100%;
+			background-color: #46ACC2;
+			display: flex;
+			align-items: center;
+			padding: 0px 5px;
+			margin: 0px;
+			font-family: sans-serif;
+			color: white;
+		}
+
+		.Navbar__Link {
+			padding-right: 8px;
+		}
+
+		.Navbar__Items {
+			display: flex;
+		}
+	
+		.Navbar__Items--right {
+			margin-left:auto;
+		}
+
+		.Navbar__Link-toggle {
+			display: none;
+		}
+
+		.Navbar__Link-brand {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.logo {
+			width: 50px;
+			height: 50px;
+		}
+		
+
+		@media only screen and (max-width: 768px) {
+			.Navbar {
+				padding-top: 5px;
+			}
+			.Navbar__Items,
+			.Navbar {
+				flex-direction: column;
+			}
+
+			.Navbar__Items {
+				display:none;
+			}
+
+			.Navbar__Items--right {
+				margin-left:0;
+			}
+
+			.Navbar__ToggleShow {
+				display: flex;
+			}
+
+			.Navbar__Link {
+				margin: 5px 0px;
+			}
+
+			.Navbar__Link-toggle {
+				align-self: flex-end;
+				display: initial;
+				position: absolute;
+				cursor: pointer;
+				font-size: 20px;
+			}
+		}
+		#myDiv {
+            height: 400px;
+            max-width: 600px;
+            padding: 0px;
+           
+        }
+	</style>
+	{% block style %}{% endblock %}
+</head>
+<body>
+	<div class="container">
+		{% include "app/navbar_view.html" %}	
+
+		{% block content %}
+		{% endblock %}
+	</div>
+
+	<script src="{% static 'jquery-3.6.1.min.js' %}"></script>
+	<script src="{% static 'chart.min.js' %}"></script>
+	<script src="{% static 'plotly-2.20.0.min.js' %}"></script>
+	<script src="{% static 'd3.min.js' %}"></script>
+	<script>
+		
+	</script>
+	
+	{% block javascript %}
+	{% endblock %}
+</body>
+</html>

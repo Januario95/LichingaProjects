@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}
+	<title>Projectos</title>
+{% endblock %}
+
+{% block style %}
+	<style>
+		.appointment-section {
+			display: flex;
+			width: 40%;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+        .body-section {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 20px;
+        }
+        .body-section p {
+            padding: 0px;
+            margin: 0px;
+        }
+        .body-section form {
+            width: 100%;
+            padding: 6px 21px 21px 21px;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /*border-radius: 40px;
+            border: 1px solid #ccc;*/
+        }
+        .results-section {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+		.result-section {
+			width: 100%;
+            min-width: 425px;
+			padding: 20px;
+			border-radius: 30px; /* 10px 10px 10px; */
+			background-color: white;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		}
+		.result-section table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		.result-section tr {
+            font-size: 14px;
+            text-align: left;
+		}
+        .tr-tbody {
+            border-bottom: 1px solid #ccc;
+        }
+		.result-section th,
+		.result-section td {
+			/*border: 1px solid #ccc;*/
+			padding: 5px;
+            border-bottom: 1px solid #ccc;
+		}
+		.result-section td {
+			font-size: 13px;
+		}
+		.row {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+		.gender {
+			font-weight: normal;
+		}
+		.link {
+			text-decoration: none;
+		}
+		td a {
+			text-decoration: none;
+		}
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .form-row label {
+            font-size: 13px;
+        }
+        #id_priority {
+            margin-bottom: 10px;
+        }
+        .asterisk {
+            font-size: 10px;
+            margin-top: 5px;
+            color: white;
+        }
+        .center-td {
+            text-align: center;
+        }
+        .patiente-field {
+            display: none;
+        }
+        .date-field {
+            display: none;
+        }
+        .submitted-fields {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .error {
+            color: red;
+            font-size: 11px;
+            font-style: italic;
+        }
+        .highlight-row {
+            color: white;
+            background-color: goldenrod;
+            transition: all 0.3s;
+            font-size: 16px;
+            transform: scale(1.05);
+        }
+        
+
+		@media only screen and (max-width: 768px) {
+            .body-section {
+                
+            }
+			select, input[type="submit"] {
+                width: 100%;
+				max-width: 230px;
+				height: 28px;
+            }
+			input[type="text"],
+            input[type="date"],
+            input[type="month"],
+            input[type="email"],
+			#id_password {
+				width: 100%;
+				height: 25px;
+			}
+            .form-row label {
+                font-size: 12px;
+            }
+            .result-section tr {
+                font-size: 12px;
+            }
+            .result-section td {
+                font-size: 11px;
+            }
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+    <div class="appointment-section">
+        <div class="body-section">
+            <div class="result-section">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="table-header name">
+                                Titúlo
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                            <tr>
+                                <td><a href="{% url 'app:project_detail' project.title %}">{{ project.title }}*</a></td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td><a href="{% url 'app:fish_selling' %}">Venda de peixe</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'app:fish_selling_meponda' %}">Venda de peixe meponda</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'app:fish_to_teachers' %}">Peixe para professores</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'app:fish_lichinga' %}">Peixe em Lichinga</a></td>
+                        </tr> 
+                        <tr>
+                            <td><a href="{% url 'app:gergelim_selling' %}">Venda de gergelim</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'app:beans_selling' %}">Venda de feijao</a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="{% url 'app:venda_de_feijao_2' %}">Venda de feijao 2</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+		
+	</script>
+{% endblock %}
+
